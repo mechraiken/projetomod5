@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:root@localhost:5432/mydb?schema=public"
+}
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  email     String   @db.VarChar(100)
+  password  String   @db.VarChar(100)
+  cpf       String   @db.VarChar(15)
+  isAdmin   Boolean  @default(false)
+  profiles  Profiles[]
+}
+
+model Profiles{
+  id            Int      @id @default(autoincrement())
+  title         String   @db.VarChar(100)
+  imageURL      String   @db.VarChar(255)
+  user          Users    @relation(fields: [UserId], references: [id])    
+  UserId        Int
+  gameFavorites GameFavorites[]
+}
+
+model Games{
+  id                  Int       @id @default(autoincrement())
+  title               String    @db.VarChar(100)
+  CoverImageUrl       String    @db.VarChar(255)
+  description         String    @db.VarChar(100)  
+  year                Int
+  imdbScore           Int  
+  trailerYouTubeUrl   String    @db.VarChar(255)
+  gameplayYouTubeUrl  String    @db.VarChar(255)
+  genres              GamesGenres[]
+  gameFavorites       GameFavorites[]
+}
+
+model Genres{
+  id                  Int       @id @default(autoincrement())
+  name                String    @db.VarChar(100)
+  games               GamesGenres[]
+}
+
+model GamesGenres{
+  game    Games @relation(fields: [gameId], references: [id])
+  gameId  Int  
+  genre   Genres @relation(fields: [genreId], references: [id])
+  genreId Int
+
+  @@id([gameId,genreId])
+}
+
+model GameFavorites{
+  profile   Profiles @relation(fields: [profileId], references: [id])
+  profileId Int
+  game    Games @relation(fields: [gameId], references: [id])
+  gameId    Int
+
+  @@id([profileId,gameId])
+
+}
+
+
