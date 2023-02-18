@@ -7,6 +7,6 @@ export class AppController {
 
   @Get()
   getAppStatus(): string {
-    return this.appService.getAppStatus();
+    return this.appService.getAppStatus(); 
   }
 }
