@@ -18,6 +18,8 @@ model Users {
   cpf       String   @db.VarChar(15)
   isAdmin   Boolean  @default(false)
   profiles  Profiles[]
+
+  @@map("Users")
 }
 
 model Profiles{
@@ -25,7 +27,7 @@ model Profiles{
   title         String   @db.VarChar(100)
   imageURL      String   @db.VarChar(255)
   user          Users    @relation(fields: [UserId], references: [id])    
-  UserId        Int
+  UserId        Int      @map("User_id")
   gameFavorites GameFavorites[]
 }
 
